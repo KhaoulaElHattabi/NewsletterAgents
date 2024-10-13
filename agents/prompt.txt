@@ -1,0 +1,101 @@
+Vous êtes un rédacteur de bulletin d'information spécialisé dans l'intelligence artificielle. Votre tâche est de créer une newsletter captivante et informative à partir d'informations récentes sur l'IA.
+
+### Instructions :
+1. **Introduction** : Rédigez une introduction engageante qui attire l'attention des lecteurs sur les dernières tendances et développements en matière d'intelligence artificielle.
+
+2. **Résumé des Informations** : Présentez plusieurs points clés sur les avancées récentes en IA, en incluant :
+   - Progrès techniques récents
+   - Nouvelles applications de l'IA
+   - Innovations majeures
+   - Impacts sur divers secteurs
+
+3. **Mentionnez les Liens** : Pour chaque point clé, incluez un lien vers l'article ou la source d'information pertinente. Par exemple :
+   - Pour les progrès en IA générative, mentionnez le lien de l'article correspondant.
+   - Pour les nouvelles applications de l'IA, fournissez le lien de la source.
+
+4. **Appels à l'Action** : Incitez les lecteurs à en apprendre davantage sur les sujets abordés en ajoutant des liens ou des références vers des articles, des études ou des rapports pertinents.
+
+5. **Style et Ton** : Utilisez un ton amical et informel, mais professionnel, pour rendre la lecture agréable et engageante.
+
+6. **Conclusion** : Terminez avec une note positive sur l'avenir de l'IA et invitez les lecteurs à rester informés.
+
+
+
+# Example usage
+query = "Quelles sont les dernières avancées en intelligence artificielle et l'IA generative ?"
+results = tavily_search.invoke(query)
+print(results)
+
+
+"""docs = any
+persistent_directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'db', 'chroma_db_agent')
+embeddings = OpenAIEmbeddings(model = os.getenv('EMBEDDING_DEPLOYMENT_NAME'), api_key = os.getenv('OPENAI_API_KEY'))
+
+if not os.path(persistent_directory): 
+    db = Chroma(docs, embeddings, persistent_directory=persistent_directory)
+else:
+    db =  Chroma(persistent_directory=persistent_directory,embedding_function=embeddings)
+    
+
+dataset = load_dataset("jamescalam/ai-arxiv2-semantic-chunks", split="train")
+# we will test with the mixtral paper
+arxiv_id = "2401.04088"
+
+res = requests.get(
+    f"https://export.arxiv.org/abs/{arxiv_id}"
+)
+
+
+# our regex
+abstract_pattern = re.compile(
+    r'<blockquote class="abstract mathjax">\s*<span class="descriptor">Abstract:</span>\s*(.*?)\s*</blockquote>',
+    re.DOTALL
+)
+
+# we search
+re_match = abstract_pattern.search(res.text)
+
+#fetch arxiv tool
+
+@tool("fetch_arxiv")
+def fetch_arxiv(arxiv_id: str):
+    fetched abstract from research paper
+    res = requests.get(
+        f"https://export.arxiv.org/abs/{arxiv_id}"
+    )
+
+    re_match = abstract_pattern.search(res.text)
+
+    return re_match.group(1)
+
+print(
+    fetch_arxiv.invoke(input={"arxiv_id": arxiv_id})
+)
+
+"""
+
+@tool
+def final_answer(article_summaries: List[Dict[str, str]]) -> str:
+    """Generate a creative and friendly news bulletin with titles, summaries, and emojis for each article."""
+    newsletter_parts = [
+        "📰 GenAI Info est là - Votre GenAI newsletter hebdomadaire 📰\n\n",
+        generate_with_llm("", "Génère une introduction dynamique, amicale et engageante en 2 phrases pour une newsletter sur les avancées en intelligence artificielle."),
+        "\n"
+    ]
+    
+    for article in article_summaries:
+        content = article['content']
+        url = article['url']
+        title = generate_with_llm(content, "Peux-tu générer un titre accrocheur pour cet article : {}")
+        summary = generate_with_llm(content, "Peux-tu générer un résumé de cet article : {}")
+        
+        newsletter_parts.append(
+            f"{title} 🎉\n\n"
+            f"{summary} 😎\n"
+            f"🔗 Découvrez tous les détails ici : {url}\n\n"
+            "💡---------------------💡\n"
+        )
+    
+    newsletter_parts.append(generate_with_llm("", "Génère une conclusion dynamique, amicale et engageante en 2 phrases pour une newsletter sur les avancées en intelligence artificielle."))
+    
+    return "\n".join(newsletter_parts)
