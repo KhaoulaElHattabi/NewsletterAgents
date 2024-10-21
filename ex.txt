@@ -184,3 +184,10 @@ newsletter_crew = Crew(
 result = newsletter_crew.kickoff()
 
 print(result)
+
+
+
+
+-----------------------
+
+<img src={{my_image.src}} alt="Newsletter Image" class="header-image">
