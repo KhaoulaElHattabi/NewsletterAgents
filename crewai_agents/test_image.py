@@ -1,29 +1,11 @@
+from email.header import Header
 from email.mime.image import MIMEImage
-import os
-from langchain.tools import tool
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from email.header import Header
+import os
 import smtplib
-from langchain_community.tools.tavily_search import TavilySearchResults
-from langchain_community.utilities.tavily_search import TavilySearchAPIWrapper
-
-numbers_of_articles = 5
-api_key=os.getenv("TAVILY_API_KEY")
-tavily_wrapper = TavilySearchAPIWrapper(tavily_api_key=api_key)
 
 
-@tool("Tavily Search")
-def tavily_search():
-    """Search for the latest AI developments using Tavily."""
-tavily_tool = TavilySearchResults(
-    max_results=numbers_of_articles,
-    exclude_domains=["wikipedia.org"],
-    api_wrapper=tavily_wrapper
-)
-
-
-@tool("Newsletter Emailer")
 def send_newsletter(body: str) -> str:
     """Send the generated newsletter via email to multiple recipients."""
     try:
@@ -59,4 +41,11 @@ def send_newsletter(body: str) -> str:
     except Exception as e:
         return f"Erreur lors de l'envoi de l'email: {str(e)}"
     
-    
+html = """\
+        <html>
+        <body>
+        <img src="cid:Mailtrapimage">
+        </body>
+        </html>
+        """    
+send_newsletter(html)
