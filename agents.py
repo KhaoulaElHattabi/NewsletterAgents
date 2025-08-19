@@ -3,27 +3,27 @@ from crewai import Agent
 
 from datetime import datetime, timedelta
 from azure_llm import llm
-from tool import send_newsletter, tavily_tool
-
+from tool import send_newsletter
+from crewai_tools import SerperDevTool
 
 
 current_date = datetime.now()
 start_week = (current_date - timedelta(days=current_date.weekday())).strftime('%Y-%m-%d')  # Monday of the current week
 end_week = (current_date + timedelta(days=(6 - current_date.weekday()))).strftime('%Y-%m-%d')  # Sunday of the current week
-
 numbers_of_articles = 5
 
 
-
+os.environ.get("SERPER_API_KEY")
+search_tool = SerperDevTool()
 
 
 # Optimize agent definitions
 researcher = Agent(
     role='AI News Researcher',
     goal='Find the latest AI developments',
-    backstory=f"""You're an AI researcher focusing on news and breakthroughs from {start_week} to {end_week}. 
+    backstory=f"""You're an AI researcher focusing on getting {numbers_of_articles} news articles and breakthroughs from {start_week} to {end_week}. 
     If no results, search 7 days before {start_week}.""",
-    tools=[tavily_tool],
+    tools=[search_tool],
     verbose=True,
     llm=llm
 )

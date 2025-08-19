@@ -1,26 +1,11 @@
 from email.mime.image import MIMEImage
 import os
-from langchain.tools import tool
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.header import Header
 import smtplib
-from langchain_community.tools.tavily_search import TavilySearchResults
-from langchain_community.utilities.tavily_search import TavilySearchAPIWrapper
+from langchain.tools import tool
 
-numbers_of_articles = 5
-api_key=os.getenv("TAVILY_API_KEY")
-tavily_wrapper = TavilySearchAPIWrapper(tavily_api_key=api_key)
-
-
-@tool("Tavily Search")
-def tavily_search():
-    """Search for the latest AI developments using Tavily."""
-tavily_tool = TavilySearchResults(
-    max_results=numbers_of_articles,
-    exclude_domains=["wikipedia.org"],
-    api_wrapper=tavily_wrapper
-)
 
 
 @tool("Newsletter Emailer")
