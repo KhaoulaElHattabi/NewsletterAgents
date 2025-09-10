@@ -65,14 +65,21 @@ python main.py
 
 ```
 newsletter_agent/
-├── agents.py
-├── tool.py
-├── tasks.py
-├── main.py
-├── newsletter_template.py
-├── requirements.txt
 ├── .env
-└── banner.jpg
+├── README.md
+├── assets/
+├── crewagents/
+│   ├── __init__.py
+│   ├── agents.py
+│   ├── azure_llm.py
+│   ├── image.png
+│   ├── main.py
+│   ├── newsletter_template.py
+│   ├── requirements.txt
+│   ├── tasks.py
+│   ├── test_image.py
+│   ├── tool.py
+├── venv/
 ```
 
 ---
@@ -94,6 +101,12 @@ Below are real examples of newsletters sent using GenAI Newsletter Agent:
 
 ## 🤝 Contributing
 Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
+
+
+## 📬 Contact Me
+For collaboration, questions, or freelance opportunities, feel free to reach out:
+
+- Email: khaoula.elhattabi1@gmail.com
 
 
 
