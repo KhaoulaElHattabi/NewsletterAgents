@@ -23,45 +23,33 @@ class send_newsletter(BaseTool):
         """Send the generated newsletter via email to multiple recipients."""
         try:
             msg = MIMEMultipart()
-            from_email = os.getenv("FROM_EMAIL")
-            to_emails = os.getenv("TO_EMAIL")
+            msg['From'] = os.getenv("FROM_EMAIL")
 
-            if not from_email:
-                return "Error: FROM_EMAIL environment variable is not set."
+            # Récupérer et traiter la chaîne des destinataires
+            to_emails = os.getenv("TO_EMAIL", "").replace('"', '').split(',')
+            to_emails = [email.strip() for email in to_emails if email.strip()]
 
             if not to_emails:
-                return "Error: TO_EMAIL environment variable is not set."
+                return "Erreur : Aucun destinataire valide spécifié dans TO_EMAIL"
 
-            to_email_list = to_emails.split(',')
-            msg['From'] = from_email
-            msg['To'] = ', '.join(to_email_list)
+            msg['To'] = ', '.join(to_emails)
             msg['Subject'] = "GenAI Newsletter"
 
-            # Attach the HTML body
-            msg.attach(MIMEText(body, 'html', 'utf-8'))
+            # Encode the body as UTF-8
+            msg.attach(MIMEText(body.encode('utf-8'), 'html', 'utf-8'))
 
-            # Attach the image
-            image_path = 'image.png'
-            if os.path.exists(image_path):
-                with open(image_path, 'rb') as fp:
-                    image = MIMEImage(fp.read())
-                image.add_header('Content-ID', '<banner>')
-                msg.attach(image)
-            else:
-                return f"Error: Image file '{image_path}' not found."
+            # Add the image
+            with open('image.png', 'rb') as fp:
+                image = MIMEImage(fp.read())
+            image.add_header('Content-ID', '<Mailtrapimage>')
+            msg.attach(image)
 
-            # Send the email
             with smtplib.SMTP('smtp.gmail.com', 587, timeout=60) as server:
                 server.starttls()
-                email_password = os.getenv("EMAIL_PASSWORD")
-                if not email_password:
-                    return "Error: EMAIL_PASSWORD environment variable is not set."
-                server.login(from_email, email_password)
+                server.login(os.getenv("FROM_EMAIL"), os.getenv("EMAIL_PASSWORD"))
                 server.send_message(msg)
-
-            return f"Email successfully sent to {len(to_email_list)} recipients!"
-
+            return f"Email envoyé avec succès à {len(to_emails)} destinataires!"
         except smtplib.SMTPException as e:
-            return f"SMTP error occurred while sending the email: {str(e)}"
+            return f"Erreur SMTP lors de l'envoi de l'email: {str(e)}"
         except Exception as e:
-            return f"An error occurred while sending the email: {str(e)}"
+            return f"Erreur lors de l'envoi de l'email: {str(e)}"

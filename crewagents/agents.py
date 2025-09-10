@@ -1,7 +1,7 @@
 import os
 from crewai import Agent
 from datetime import datetime, timedelta
-from crewagents.llm_integration import llm
+from llm_integration import llm
 from tool import send_newsletter
 from crewai_tools import SerperDevTool
 
