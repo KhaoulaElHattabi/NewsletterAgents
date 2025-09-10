@@ -95,7 +95,14 @@ newsletter_agent/
 ---
 
 ## 📸 Screenshots
-Below are real examples of newsletters sent using GenAI Newsletter Agent:
+
+Below are workflow and example screenshots of newsletters sent using GenAI Newsletter Agent:
+
+### Workflow Example
+![CrewAI Workflow](assets/crewagents-completion.png)
+
+### Newsletter Example
+![Newsletter Example](assets/newsletter_email.png) 
 
 
 
