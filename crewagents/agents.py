@@ -1,18 +1,12 @@
 import os
 from crewai import Agent
-
 from datetime import datetime, timedelta
 from azure_llm import llm
-from crewagents.tool import NewsletterEmailer, send_newsletter
-from crewai_tools.tools.serper import SerperDevTool
+from tool import send_newsletter
+from crewai_tools import SerperDevTool
 
 
 current_date = datetime.now()
-sender = Agent(
-    ...,
-    tools=[NewsletterEmailer()],
-    ...
-)
 start_week = (current_date - timedelta(days=current_date.weekday())).strftime('%Y-%m-%d')  # Monday of the current week
 end_week = (current_date + timedelta(days=(6 - current_date.weekday()))).strftime('%Y-%m-%d')  # Sunday of the current week
 numbers_of_articles = 5
@@ -53,7 +47,7 @@ sender = Agent(
     role='Email Sender',
     goal='Send the newsletter via email',
     backstory="You're responsible for sending out the newsletter to subscribers.",
-    tools=[send_newsletter],
+    tools=[send_newsletter()],
     verbose=True,
     llm=llm
 )

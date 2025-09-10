@@ -1,0 +1,6 @@
+crewai
+langchain
+langchain-tavily
+python-dotenv
+pydantic
+smtplib
