@@ -1,16 +1,20 @@
 from crewai import Task
 from agents import researcher, writer, editor, sender
 from newsletter_template import NEWSLETTER_TEMPLATE
-
+from datetime import datetime, timedelta
 
 numbers_of_articles = 5
+current_date = datetime.now()
 
 # Define tasks
 research_task = Task(
     description=f"Search for the latest {numbers_of_articles} AI developments using Tavily. Focus on recent breakthroughs and significant updates.",
     agent=researcher,
-    expected_output=f"A list of {numbers_of_articles} recent AI articles with titles and URLs."
+    expected_output=f"A list of {numbers_of_articles} recent AI articles with titles and URLs.",
+    max_retries=1
+
 )
+
 content_generation_task = Task(
     description=f"""For each of the {numbers_of_articles} articles:
     1. Generate a catchy French title (in quotes)
@@ -18,8 +22,11 @@ content_generation_task = Task(
     3. Include the source link
     Do not use emoji characters.""",
     agent=writer,
-    expected_output=f"{numbers_of_articles} articles with French title, summary, and source link."
+    expected_output=f"{numbers_of_articles} résumés d'articles avec titres accrocheurs en français et liens sources",
+    context=[research_task]
 )
+
+
 
 newsletter_structure_task = Task(
  description=f"""Structure the newsletter using the generated content. Use the following HTML template and fill it with the appropriate content:

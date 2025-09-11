@@ -10,11 +10,14 @@ current_date = datetime.now()
 start_week = (current_date - timedelta(days=current_date.weekday())).strftime('%Y-%m-%d')  # Monday of the current week
 end_week = (current_date + timedelta(days=(6 - current_date.weekday()))).strftime('%Y-%m-%d')  # Sunday of the current week
 numbers_of_articles = 5
+week_number = current_date.isocalendar()[1]  # ISO week number
+print(f"Current week number: {week_number}")
 
 
 os.environ.get("SERPER_API_KEY")
 search_tool = SerperDevTool()
 
+# Optimize agent definitions
 
 # Optimize agent definitions
 researcher = Agent(
@@ -24,7 +27,11 @@ researcher = Agent(
     If no results, search 7 days before {start_week}.""",
     tools=[search_tool],
     verbose=True,
-    llm=llm
+    llm=llm,
+    max_iter=7,  # Allow more iterations for diverse searches
+    allow_delegation=False,
+    memory=True
+
 )
 
 writer = Agent(

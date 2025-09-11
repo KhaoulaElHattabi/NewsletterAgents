@@ -77,7 +77,7 @@ NEWSLETTER_TEMPLATE = """
 <body>
 <div class="newsletter-container">
 <img src="cid:Mailtrapimage" alt="Newsletter Image" class ="header-image">
-<h1>&#x1F4F0; GenAI Info est là - Votre newsletter hebdomadaire &#x1F4F0;</h1>
+<h1>&#x1F4F0; GenAI Info est là - Newsletter hebdomadaire - Semaine {{week_number}} &#x1F4F0;</h1>
 
 <p>{{introduction}}</p>
 
