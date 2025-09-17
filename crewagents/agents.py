@@ -9,29 +9,30 @@ from crewai_tools import SerperDevTool
 current_date = datetime.now()
 start_week = (current_date - timedelta(days=current_date.weekday())).strftime('%Y-%m-%d')  # Monday of the current week
 end_week = (current_date + timedelta(days=(6 - current_date.weekday()))).strftime('%Y-%m-%d')  # Sunday of the current week
-numbers_of_articles = 5
+numbers_of_articles = 2
 week_number = current_date.isocalendar()[1]  # ISO week number
 print(f"Current week number: {week_number}")
-
+print(f"Start week: {start_week}, End week: {end_week}")
 
 os.environ.get("SERPER_API_KEY")
 search_tool = SerperDevTool()
 
-# Optimize agent definitions
 
-# Optimize agent definitions
 researcher = Agent(
     role='AI News Researcher',
     goal='Find the latest AI developments',
     backstory=f"""You're an AI researcher focusing on getting {numbers_of_articles} news articles and breakthroughs from {start_week} to {end_week}. 
-    If no results, search 7 days before {start_week}.""",
+    If no results, search 7 days before {start_week}.
+    
+    IMPORTANT: When using the search tool, pass only a simple string query, not a dictionary. 
+    Example: Use "You're an AI researcher focusing on getting {numbers_of_articles} news articles and breakthroughs from {start_week} to {end_week}. 
+    If no results, search 7 days before {start_week}. " not {{"search_query": "AI developments "}}""",
     tools=[search_tool],
     verbose=True,
     llm=llm,
-    max_iter=7,  # Allow more iterations for diverse searches
+    max_iter=1,
     allow_delegation=False,
     memory=True
-
 )
 
 writer = Agent(
@@ -39,6 +40,8 @@ writer = Agent(
     goal='Create an engaging AI newsletter',
     backstory="You're a skilled writer who can create compelling newsletters about AI advancements in French.",
     verbose=True,
+        max_iter=1,
+
     llm=llm
 )
 
@@ -47,6 +50,8 @@ editor = Agent(
     goal='Structure and format the newsletter',
     backstory="You're an experienced editor who can organize content into an engaging newsletter format.",
     verbose=True,
+        max_iter=1,
+
     llm=llm
 )
 
@@ -56,5 +61,7 @@ sender = Agent(
     backstory="You're responsible for sending out the newsletter to subscribers.",
     tools=[send_newsletter()],
     verbose=True,
+        max_iter=1,
+
     llm=llm
 )

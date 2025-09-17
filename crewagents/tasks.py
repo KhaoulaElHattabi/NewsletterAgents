@@ -3,18 +3,25 @@ from agents import researcher, writer, editor, sender
 from newsletter_template import NEWSLETTER_TEMPLATE
 from datetime import datetime, timedelta
 
-numbers_of_articles = 5
 current_date = datetime.now()
+start_week = (current_date - timedelta(days=current_date.weekday())).strftime('%Y-%m-%d')  # Monday of the current week
+end_week = (current_date + timedelta(days=(6 - current_date.weekday()))).strftime('%Y-%m-%d')  # Sunday of the current week
+numbers_of_articles = 5
+week_number = current_date.isocalendar()[1]  # ISO week number
+print(f"Current week number: {week_number}")
+
 
 # Define tasks
 research_task = Task(
-    description=f"Search for the latest {numbers_of_articles} AI developments using Tavily. Focus on recent breakthroughs and significant updates.",
+    description="""
+    Search for AI developments from {start_week} to {end_week}.
+    
+    When using the search tool, provide ONLY the search query as a plain string.
+    Find {numbers_of_articles} articles.
+    """,
     agent=researcher,
-    expected_output=f"A list of {numbers_of_articles} recent AI articles with titles and URLs.",
-    max_retries=1
-
+    expected_output="A list of recent AI developments with titles, summaries, and sources"
 )
-
 content_generation_task = Task(
     description=f"""For each of the {numbers_of_articles} articles:
     1. Generate a catchy French title (in quotes)
@@ -22,7 +29,7 @@ content_generation_task = Task(
     3. Include the source link
     Do not use emoji characters.""",
     agent=writer,
-    expected_output=f"{numbers_of_articles} résumés d'articles avec titres accrocheurs en français et liens sources",
+    expected_output="A list of recent AI developments with titles, summaries, and sources" , # ADD THIS LINE
     context=[research_task]
 )
 
@@ -59,6 +66,7 @@ sending_task = Task(
     3. Use UTF-8 encoding
     4. If sending fails, print error and retry
     5. If second attempt fails, send a test email
+    6. When using the Newsletter Emailer tool, always pass the HTML body as a plain string to the body argument."
     Report any issues encountered.""",
     agent=sender,
     expected_output="Email sending confirmation or error report."
